@@ -38,14 +38,14 @@ docker: docker-user /usr/bin/docker
 	sudo curl -sL https://deb.nodesource.com/setup_12.x | bash -
 	sudo apt install nodejs
 
-~/.npm-global2:
+~/.npm-global:
 	mkdir -p ~/.npm-global
 	echo "prefix=${HOME}/.npm-global" >> ~/.npmrc
 	echo 'NPM_PACKAGES="${HOME}/.npm-packages"' >> ~/.profile
 	echo 'NODE_PATH="$$NPM_PACKAGES/lib/node_modules:$$NODE_PATH"' >> ~/.profile
-	echo 'PATH=$$PATH:${HOME}/.npm-packages/bin' >> ~/.profile
+	echo 'PATH="$$PATH:$$NPM_PACKAGES/bin"' >> ~/.profile
 
-node: ~/.npm-global2 /usr/bin/node
+node: ~/.npm-global /usr/bin/node
 
 #                   _              
 #  _ __ ___  __ _  | | _____ _   _ 
