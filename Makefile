@@ -41,7 +41,7 @@ docker: docker-user /usr/bin/docker
 ~/.npm-global:
 	mkdir -p ~/.npm-global
 	echo "prefix=${HOME}/.npm-global" >> ~/.npmrc
-	echo 'NPM_PACKAGES="${HOME}/.npm-packages"' >> ~/.profile
+	echo 'NPM_PACKAGES="${HOME}/.npm-global"' >> ~/.profile
 	echo 'NODE_PATH="$$NPM_PACKAGES/lib/node_modules:$$NODE_PATH"' >> ~/.profile
 	echo 'PATH="$$PATH:$$NPM_PACKAGES/bin"' >> ~/.profile
 
