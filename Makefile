@@ -14,6 +14,8 @@ help:
 	@echo "  make rsa-key  - generates ssh private key"
 	@echo "  make figlet   - installs figlet (big ASCII text)"
 	@echo "  make dotnet   - installs dotnet (.net core)"
+	@echo "  make netstat  - installs net-tools (netstat)"
+	@echo "  make mongo-client  - installs mongo client (mongo)"
 
 update:
 	sudo apt-get update
@@ -27,10 +29,18 @@ update:
 /usr/bin/docker-compose:
 	apt-get install docker-compose
 
+/usr/bin/docker: update
+	apt install apt-transport-https ca-certificates curl software-properties-common
+	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+	add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+	apt update
+	apt-cache policy docker-ce
+	apt install docker-ce
+
 docker-user:
 	( cat /etc/group | grep docker | grep ${USER} ) || ( sudo usermod -aG docker ${USER} && newgrp docker )
 
-docker: docker-user /usr/bin/docker /usr/bin/docker-compose
+docker: /usr/bin/docker docker-user /usr/bin/docker-compose
 
 #                  _ 
 #  _ __   ___   __| | ___ 
@@ -108,9 +118,17 @@ dotnet: /usr/bin/dotnet
 
 netstat: /usr/bin/netstat
 
+#
+#  _ __ ___   ___  _ __   __ _  ___
+# | '_ ` _ \ / _ \| '_ \ / _` |/ _ \
+# | | | | | | (_) | | | | (_| | (_) |
+# |_| |_| |_|\___/|_| |_|\__, |\___/
+#                        |___/
 
 /usr/bin/mongo:
 	curl -fsSL https://www.mongodb.org/static/pgp/server-4.4.asc | apt-key add -
 	echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
 	apt update
 	apt install mongodb-org-shell
+
+mongo-client: /usr/bin/mongo
