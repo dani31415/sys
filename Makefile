@@ -13,6 +13,7 @@ help:
 	@echo "  make node     - installs node & npm"
 	@echo "  make rsa-key  - generates ssh private key"
 	@echo "  make figlet   - installs figlet (big ASCII text)"
+	@echo "  make dotnet   - installs dotnet (.net core)"
 
 update:
 	sudo apt-get update
@@ -23,10 +24,13 @@ update:
 # | (_| | (_) | (__|   <  __/ |   
 #  \__,_|\___/ \___|_|\_\___|_|   
 
+/usr/bin/docker-compose:
+	apt-get install docker-compose
+
 docker-user:
 	( cat /etc/group | grep docker | grep ${USER} ) || ( sudo usermod -aG docker ${USER} && newgrp docker )
 
-docker: docker-user /usr/bin/docker
+docker: docker-user /usr/bin/docker /usr/bin/docker-compose
 
 #                  _ 
 #  _ __   ___   __| | ___ 
@@ -70,3 +74,43 @@ rsa-key: ~/.ssh/id_rsa
 	sudo apt install figlet
 
 figlet: /usr/bin/figlet
+
+#              _   
+#    _ __   ___| |_ 
+#   | '_ \ / _ \ __|
+#  _| | | |  __/ |_ 
+# (_)_| |_|\___|\__|
+#
+
+packages-microsoft-prod.deb:
+	wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+
+/usr/bin/dotnet: packages-microsoft-prod.deb
+	dpkg -i packages-microsoft-prod.deb
+	apt-get update; \
+  	 apt-get install -y apt-transport-https && \
+  	 apt-get update && \
+	 apt-get install -y dotnet-sdk-3.1
+	rm -f packages-microsoft-prod.deb
+
+dotnet: /usr/bin/dotnet
+
+#             _       _        _   
+#  _ __   ___| |_ ___| |_ __ _| |_ 
+# | '_ \ / _ \ __/ __| __/ _` | __|
+# | | | |  __/ |_\__ \ || (_| | |_ 
+# |_| |_|\___|\__|___/\__\__,_|\__|
+# 
+
+/usr/bin/netstat:
+	apt-get update
+	apt-get install net-tools
+
+netstat: /usr/bin/netstat
+
+
+/usr/bin/mongo:
+	curl -fsSL https://www.mongodb.org/static/pgp/server-4.4.asc | apt-key add -
+	echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+	apt update
+	apt install mongodb-org-shell
