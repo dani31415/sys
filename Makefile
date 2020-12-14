@@ -16,6 +16,7 @@ help:
 	@echo "  make dotnet   - installs dotnet (.net core)"
 	@echo "  make netstat  - installs net-tools (netstat)"
 	@echo "  make mongo-client  - installs mongo client (mongo)"
+	@echo "  make sudoer   - sets sudo without password for current user '${USER}'"
 
 update:
 	sudo apt-get update
@@ -132,3 +133,17 @@ netstat: /usr/bin/netstat
 	apt install mongodb-org-shell
 
 mongo-client: /usr/bin/mongo
+
+#                _
+#  ___ _   _  __| | ___   ___ _ __
+# / __| | | |/ _` |/ _ \ / _ \ '__|
+# \__ \ |_| | (_| | (_) |  __/ |
+# |___/\__,_|\__,_|\___/ \___|_|
+# 
+
+# Set sudo without password for current user
+sudoer:
+	sudo chmod u+w /etc/sudoers
+	# If '/etc/sudoers' does no contains 'NOPASSWD', append "${USER} ALL=(ALL) NOPASSWD:ALL" to it
+	sudo grep NOPASSWD /etc/sudoers || ( echo "${USER} ALL=(ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers )
+	sudo chmod u-w /etc/sudoers
