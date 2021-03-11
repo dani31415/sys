@@ -17,6 +17,7 @@ help:
 	@echo "  make netstat  - installs net-tools (netstat)"
 	@echo "  make mongo-client  - installs mongo client (mongo)"
 	@echo "  make sudoer   - sets sudo without password for current user '${USER}'"
+	@echo "  make cuda     - installs cuda drivers for NVIDIA"
 
 update:
 	sudo apt-get update
@@ -147,3 +148,16 @@ sudoer:
 	# If '/etc/sudoers' does no contains 'NOPASSWD', append "${USER} ALL=(ALL) NOPASSWD:ALL" to it
 	sudo grep NOPASSWD /etc/sudoers || ( echo "${USER} ALL=(ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers )
 	sudo chmod u-w /etc/sudoers
+
+#                 _
+#   ___ _   _  __| | __ _
+#  / __| | | |/ _` |/ _` |
+# | (__| |_| | (_| | (_| |
+#  \___|\__,_|\__,_|\__,_|
+# 
+
+cuda:
+	sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
+	sudo sh -c 'echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/cuda.list'
+	sudo apt-get update
+	sudo apt-get install -y cuda-toolkit-11-0
