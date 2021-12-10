@@ -18,6 +18,7 @@ help:
 	@echo "  make mongo-client  - installs mongo client (mongo)"
 	@echo "  make sudoer   - sets sudo without password for current user '${USER}'"
 	@echo "  make cuda     - installs cuda drivers for NVIDIA"
+	@echo "  make javac    - installs javac
 
 update:
 	sudo apt-get update
@@ -160,4 +161,32 @@ cuda:
 	sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
 	sudo sh -c 'echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/cuda.list'
 	sudo apt-get update
-	sudo apt-get install -y cuda-toolkit-11-0
+	sudo apt-get install -y cuda-toolkit-11-2
+
+# Note. Maybe is needed to update the cuda-toolkit
+cuda-docker: export distribution:=ubuntu20.04
+cuda-docker:
+	curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+	curl -s -L https://nvidia.github.io/nvidia-docker/${distribution}/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+	curl -s -L https://nvidia.github.io/libnvidia-container/experimental/$distribution/libnvidia-container-experimental.list | sudo tee /etc/apt/sources.list.d/libnvidia-container-experimental.list
+	sudo sudo apt-get update
+	sudo apt-get install -y nvidia-docker2
+
+/usr/bin/pip3:
+	sudo apt install -y python3-pip
+
+/usr/bin/docker-compose:
+	sudo -H pip3 install docker-compose==1.28.3
+
+#    _
+#   (_) __ ___   ____ _  ___ 
+#   | |/ _` \ \ / / _` |/ __|
+#   | | (_| |\ V / (_| | (__ 
+#  _/ |\__,_| \_/ \__,_|\___|
+# |__/
+#
+
+/usr/bin/javac:
+	sudo apt install openjdk-17-jdk-headless
+
+javac: /usr/bin/javac
